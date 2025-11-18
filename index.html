@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Видео по клику</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    #video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<video id="video" muted playsinline>
+  <source src="vdff.mp4" type="video/mp4">
+  Ваш браузер не поддерживает видео.
+</video>
+
+<script>
+  const video = document.getElementById('video');
+  const body = document.body;
+
+  body.addEventListener('click', () => {
+    // Показываем и запускаем видео
+    video.style.display = 'block';
+    video.play().catch(e => console.log("Ошибка автоплея:", e));
+
+    // Запрос на полноэкранный режим (работает на большинстве устройств)
+    if (body.requestFullscreen) {
+      body.requestFullscreen();
+    } else if (body.webkitRequestFullscreen) { // Safari
+      body.webkitRequestFullscreen();
+    } else if (body.msRequestFullscreen) { // IE11
+      body.msRequestFullscreen();
+    }
+  });
+
+  // Когда видео заканчивается — скрываем его и выходим из полноэкранного режима (если возможно)
+  video.addEventListener('ended', () => {
+    video.style.display = 'none';
+
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) {
+      document.msExitFullscreen();
+    }
+  });
+</script>
+
+</body>
+</html>

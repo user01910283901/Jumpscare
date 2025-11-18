@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Видео по клику</title>
+  <title>Jumpscare Chaos</title>
   <style>
     * {
       margin: 0;
@@ -30,7 +30,7 @@
 </head>
 <body>
 
-<video id="video" muted playsinline>
+<video id="video" playsinline>
   <source src="vdff.mp4" type="video/mp4">
   Ваш браузер не поддерживает видео.
 </video>
@@ -40,11 +40,18 @@
   const body = document.body;
 
   body.addEventListener('click', () => {
-    // Показываем и запускаем видео
+    // Убираем muted ПОСЛЕ клика — это разрешено!
+    video.muted = false;
     video.style.display = 'block';
-    video.play().catch(e => console.log("Ошибка автоплея:", e));
 
-    // Запрос на полноэкранный режим (работает на большинстве устройств)
+    // Запускаем видео
+    video.play().catch(e => {
+      console.log("Ошибка воспроизведения:", e);
+      // Если не получилось — просим кликнуть ещё раз
+      alert("Кликни ещё раз, чтобы включить звук!");
+    });
+
+    // Полноэкранный режим
     if (body.requestFullscreen) {
       body.requestFullscreen();
     } else if (body.webkitRequestFullscreen) { // Safari
@@ -54,10 +61,9 @@
     }
   });
 
-  // Когда видео заканчивается — скрываем его и выходим из полноэкранного режима (если возможно)
+  // Когда видео заканчивается — скрываем его и выходим из полноэкранного режима
   video.addEventListener('ended', () => {
     video.style.display = 'none';
-
     if (document.exitFullscreen) {
       document.exitFullscreen();
     } else if (document.webkitExitFullscreen) {
